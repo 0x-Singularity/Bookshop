@@ -44,15 +44,6 @@ function App() {
             <Route path="/add" element={<AddBookPage />} />
           </Routes>
         </main>
-
-        {/* Cozy Footer */}
-        <footer className="bg-white border-t border-cream-300 mt-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <p className="text-center text-sm text-brown-700">
-              Happy reading! ☕📖
-            </p>
-          </div>
-        </footer>
       </div>
     </Router>
   )
