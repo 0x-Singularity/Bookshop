@@ -1,68 +1,72 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import "tailwindcss";
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Inter:wght@300;400;500;600&display=swap');
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@theme {
+  /* Cozy Color Palette */
+  --color-cream-50: #FFFBF5;
+  --color-cream-100: #FFF8F0;
+  --color-cream-200: #FFF0E0;
+  --color-cream-300: #FFE8D0;
+  --color-cream-400: #FFE0C0;
+  --color-cream-500: #FFD8B0;
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
+  --color-terracotta-400: #D4876F;
+  --color-terracotta-500: #C87855;
+  --color-terracotta-600: #B5694D;
+  --color-terracotta-700: #9F5A42;
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
+  --color-brown-700: #5D4037;
+  --color-brown-800: #4E342E;
+  --color-brown-900: #3E2723;
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  --color-sage-400: #A4B39E;
+  --color-sage-500: #8B9A7E;
+  --color-sage-600: #788A6D;
+
+  /* Font Families */
+  --font-family-serif: 'Merriweather', Georgia, serif;
+  --font-family-sans: 'Inter', system-ui, sans-serif;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+@layer base {
+  body {
+    background-color: var(--color-cream-100);
+    color: var(--color-brown-900);
+    font-family: var(--font-family-sans);
   }
-  a:hover {
-    color: #747bff;
+}
+
+@layer components {
+  /* Cozy button styles */
+  .btn-primary {
+    @apply bg-terracotta-500 hover:bg-terracotta-600 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md;
   }
-  button {
-    background-color: #f9f9f9;
+  
+  .btn-secondary {
+    @apply bg-cream-300 hover:bg-cream-400 text-brown-800 font-medium py-2 px-4 rounded-lg transition-all duration-200;
+  }
+  
+  /* Cozy card styles */
+  .card {
+    @apply bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6;
+  }
+  
+  /* Cozy input styles */
+  .input {
+    @apply w-full px-4 py-2 rounded-lg border border-cream-400 focus:outline-none focus:ring-2 focus:ring-terracotta-400 focus:border-transparent bg-white transition-all;
+  }
+  
+  .textarea {
+    @apply w-full px-4 py-2 rounded-lg border border-cream-400 focus:outline-none focus:ring-2 focus:ring-terracotta-400 focus:border-transparent bg-white transition-all resize-none;
+  }
+  
+  /* Progress bar */
+  .progress-bar {
+    @apply w-full h-3 bg-cream-300 rounded-full overflow-hidden;
+  }
+  
+  .progress-fill {
+    @apply h-full bg-gradient-to-r from-terracotta-500 to-terracotta-400 transition-all duration-500 rounded-full;
   }
 }
