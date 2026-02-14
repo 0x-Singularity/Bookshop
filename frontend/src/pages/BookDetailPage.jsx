@@ -93,7 +93,7 @@ function BookDetailPage() {
   return (
     <div className="max-w-5xl mx-auto">
       <button
-        onClick={() => navigate('/')}
+        onClick={() => navigate('/library')}
         className="text-terracotta-600 hover:text-terracotta-700 mb-6 inline-flex items-center"
       >
         ← Back to Library
@@ -111,9 +111,11 @@ function BookDetailPage() {
                 className="w-full rounded-lg shadow-lg mb-4"
               />
             ) : (
-              <div className="w-full aspect-[2/3] bg-gradient-to-br from-terracotta-400 to-terracotta-600 rounded-lg shadow-lg mb-4 flex items-center justify-center">
+              <div className="w-full aspect-[2/3] rounded-lg shadow-lg mb-4 flex items-center justify-center" style={{ background: 'linear-gradient(to bottom right, var(--accent), var(--accent-hover))' }}>
                 <div className="text-center text-white p-4">
-                  <div className="text-6xl mb-2">📖</div>
+                  <div className="text-2xl font-bold" style={{ fontFamily: 'DM Serif Display, serif' }}>
+                    {book.title}
+                  </div>
                 </div>
               </div>
             )}

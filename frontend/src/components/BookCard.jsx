@@ -61,10 +61,9 @@ function BookCard({ book, onDelete }) {
               className="w-full h-64 object-cover rounded-lg shadow-md"
             />
           ) : (
-            <div className="w-full h-64 bg-gradient-to-br from-terracotta-400 to-terracotta-600 rounded-lg shadow-md flex items-center justify-center">
+            <div className="w-full h-64 rounded-lg shadow-md flex items-center justify-center" style={{ background: 'linear-gradient(to bottom right, var(--accent), var(--accent-hover))' }}>
               <div className="text-center text-white p-4">
-                <div className="text-4xl mb-2">📖</div>
-                <div className="font-serif text-lg line-clamp-3">{book.title}</div>
+                <div className="font-bold text-lg line-clamp-3" style={{ fontFamily: 'DM Serif Display, serif' }}>{book.title}</div>
               </div>
             </div>
           )}

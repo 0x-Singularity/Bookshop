@@ -41,10 +41,9 @@ function SessionList({ sessions, onSessionDeleted }) {
 
   if (sessions.length === 0) {
     return (
-      <div className="card text-center py-12 bg-cream-50">
-        <div className="text-6xl mb-4">📚</div>
-        <p className="text-brown-700 text-lg mb-2">No reading sessions yet</p>
-        <p className="text-brown-600 text-sm">
+      <div className="card text-center py-12" style={{ backgroundColor: 'var(--bg-surface-alt)' }}>
+        <p className="text-lg mb-2" style={{ color: 'var(--text-primary)' }}>No reading sessions yet</p>
+        <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
           Start logging your reading sessions to track your progress!
         </p>
       </div>

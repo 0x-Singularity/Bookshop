@@ -97,9 +97,8 @@ function LibraryPage() {
 
       {/* Books Grid */}
       {filteredBooks.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-xl">
-          <div className="text-6xl mb-4">📚</div>
-          <p className="text-brown-700 text-lg mb-4">
+        <div className="text-center py-12 rounded-xl" style={{ backgroundColor: 'var(--bg-surface)' }}>
+          <p className="text-lg mb-4" style={{ color: 'var(--text-muted)' }}>
             {filter === 'all' 
               ? "No books yet. Start building your library!" 
               : `No books in "${filter === 'not-started' ? 'Want to Read' : filter}" status.`
