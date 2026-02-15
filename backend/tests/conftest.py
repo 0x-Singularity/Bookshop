@@ -1,6 +1,6 @@
 import pytest
 from app import app as flask_app
-from models import db, Book, ReadingSession
+from models import db, User, Book, ReadingSession
 import tempfile
 import os
 
@@ -13,7 +13,8 @@ def app():
     flask_app.config.update({
         'TESTING': True,
         'SQLALCHEMY_DATABASE_URI': f'sqlite:///{db_path}',
-        'SQLALCHEMY_TRACK_MODIFICATIONS': False
+        'SQLALCHEMY_TRACK_MODIFICATIONS': False,
+        'WTF_CSRF_ENABLED': False
     })
     
     # Create the database and tables
@@ -37,10 +38,48 @@ def runner(app):
     return app.test_cli_runner()
 
 @pytest.fixture
-def sample_book(app):
+def test_user(app):
+    """Create a test user"""
+    with app.app_context():
+        user = User(
+            username='testuser',
+            email='test@example.com'
+        )
+        user.set_password('password123')
+        db.session.add(user)
+        db.session.commit()
+        
+        # Store user ID
+        user_id = user.id
+        
+        # Refresh to get full object
+        db.session.refresh(user)
+        
+        yield user
+        
+        # Clean up
+        user = db.session.get(User, user_id)
+        if user:
+            db.session.delete(user)
+            db.session.commit()
+
+@pytest.fixture
+def authenticated_client(client, test_user):
+    """Create an authenticated client"""
+    client.post('/api/auth/login', json={
+        'username': 'testuser',
+        'password': 'password123'
+    })
+    return client
+
+@pytest.fixture
+def sample_book(app, test_user):
     """Create a sample book for testing"""
     with app.app_context():
+        user = db.session.get(User, test_user.id)
+        
         book = Book(
+            user_id=user.id,
             title="Test Book",
             author="Test Author",
             total_pages=300,
@@ -50,7 +89,7 @@ def sample_book(app):
         db.session.add(book)
         db.session.commit()
         
-        # Store the book ID before session expires
+        # Store the book ID
         book_id = book.id
         
         # Refresh to get the full object
@@ -58,7 +97,7 @@ def sample_book(app):
         
         yield book
         
-        # Clean up - delete the book if it still exists
+        # Clean up
         book = db.session.get(Book, book_id)
         if book:
             db.session.delete(book)

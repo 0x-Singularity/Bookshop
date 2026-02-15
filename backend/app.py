@@ -24,6 +24,11 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+@login_manager.unauthorized_handler
+def unauthorized():
+    """Return 401 instead of redirect for API requests"""
+    return jsonify({'error': 'Authentication required'}), 401
+
 # Create tables if they don't exist
 with app.app_context():
     db.create_all()
