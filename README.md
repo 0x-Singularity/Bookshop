@@ -1,338 +1,303 @@
-# 📚 Bookshop - Personal Reading Tracker
+# Bookshop - Personal Reading Tracker
 
-A cozy, full-stack web application for tracking your reading journey. Built with React and Flask, Bookshop features a beautiful lofi-inspired design with day/night themes, helping readers manage their personal library, log reading sessions, and visualize their progress with intuitive interfaces.
+A full-stack web application for tracking your reading journey. Built with React and Flask, Bookshop features user authentication, Google Books API integration, and a lofi-inspired design with day/night themes.
 
-![React](https://img.shields.io/badge/React-18.0-61dafb?logo=react)
-![Flask](https://img.shields.io/badge/Flask-3.0-000000?logo=flask)
-![Python](https://img.shields.io/badge/Python-3.8+-3776ab?logo=python)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-06b6d4?logo=tailwindcss)
+![Tests](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME/actions/workflows/backend-tests.yml/badge.svg)
 
-## Features
+---
 
-### Book Management
-- **Google Books API Integration** - Search and add books with automatic metadata and cover images
-- **Manual Entry** - Add books not found in the API with custom details
-- **Status Tracking** - Organize books by reading status (Want to Read, Currently Reading, Completed)
-- **Visual Progress** - Real-time progress bars showing completion percentage
-- **Book Covers** - Beautiful cover images enhance the library experience
+## Screenshots
 
-### Reading Analytics
-- **Session Logging** - Track individual reading sessions with pages read, duration, and notes
-- **Progress Statistics** - View average pages per session, total reading time, and reading speed
-- **Reading History** - Complete chronological record of all reading sessions
-- **Automatic Updates** - Book status automatically updates based on progress
-- **Stats Dashboard** - Quick overview of reading counts and pages read
+### Landing Page
+![Landing Page](/pictures/LandingPage.png)
 
-### User Experience
-- **Lofi-Inspired Design** - Monospace fonts, subtle grain texture, and atmospheric aesthetics
-- **Day/Night Mode** - Toggle between warm day theme and cool evening night theme with persistent preferences
-- **Landing Page** - Welcoming home page with feature highlights and "How It Works" guide
-- **Responsive Layout** - Fully functional across desktop, tablet, and mobile devices
-- **Intuitive Navigation** - Clean, user-friendly interface with React Router
-- **Real-time Filtering** - Filter books by status with instant results
-- **Smart Validation** - Form validation prevents data entry errors
+### Library View
+![Library View](/pictures/LibraryView.png)
+
+### Book Detail
+![Book Detail](/pictures/BookView.png)
+
+### Day/Night Theme
+![Dark Mode Preview](/pictures/DarkMode.png)
+
+---
+
+## Key Features
+
+**User Authentication**
+- Secure account creation and login with password hashing
+- Session-based authentication with Flask-Login
+- Private book libraries per user
+
+**Book Management**
+- Google Books API integration for automatic metadata and cover images
+- Manual book entry for titles not in the API
+- Status tracking (Want to Read, Currently Reading, Completed)
+- Real-time progress bars and statistics
+
+**Reading Analytics**
+- Log individual reading sessions with pages read, duration, and notes
+- Track average pages per session, total reading time, and reading speed
+- View complete reading history with chronological sessions
+
+**User Experience**
+- Lofi-inspired design with monospace fonts and subtle grain texture
+- Day/night mode toggle with persistent theme preferences
+- Responsive layout optimized for desktop, tablet, and mobile
+- Real-time book filtering by status
+
+---
 
 ## Technology Stack
 
 ### Frontend
-- **React 18** - Component-based UI with hooks (useState, useEffect, useContext)
-- **React Router** - Client-side routing for seamless navigation
-- **Tailwind CSS 4** - Utility-first CSS with custom design system
-- **Axios** - Promise-based HTTP client for API requests
-- **Vite** - Fast build tool and development server
-- **Context API** - Theme management and state sharing
+- **React 18** - Component-based UI with hooks and Context API
+- **React Router** - Client-side routing
+- **Tailwind CSS 4** - Custom design system with CSS variables
+- **Axios** - HTTP client with credential support
 
 ### Backend
 - **Flask 3.0** - Lightweight Python web framework
-- **SQLAlchemy** - SQL toolkit and ORM for database operations
-- **SQLite** - Embedded relational database
-- **Flask-CORS** - Cross-Origin Resource Sharing support
-- **Google Books API** - External API integration for book metadata
+- **Flask-Login** - Session-based user authentication
+- **SQLAlchemy** - ORM for database operations
+- **SQLite/PostgreSQL** - Database (SQLite for development, PostgreSQL for production)
+- **Werkzeug** - Password hashing for security
 
-### Development Tools
-- **Python Virtual Environment** - Isolated dependency management
-- **npm** - Package management for frontend dependencies
-- **ES6+ JavaScript** - Modern JavaScript features
-- **Hot Module Replacement** - Fast development with instant updates
+### Development & Testing
+- **Pytest** - Backend testing framework with 23 comprehensive tests
+- **GitHub Actions** - Automated CI/CD pipeline running tests on every push
+- **Vite** - Fast build tool and development server
+
+---
 
 ## Project Structure
 
 ```
 bookshop/
 ├── backend/
-│   ├── app.py                 # Flask application with API routes
-│   ├── models.py              # SQLAlchemy database models
-│   ├── config.py              # Application configuration
-│   ├── requirements.txt       # Python dependencies
-│   └── reading_tracker.db     # SQLite database (auto-generated)
+│   ├── app.py              # Flask application with API routes
+│   ├── models.py           # SQLAlchemy models (User, Book, ReadingSession)
+│   ├── config.py           # Application configuration
+│   ├── tests/              # Pytest test suite
+│   │   ├── test_api.py     # API endpoint tests
+│   │   └── test_models.py  # Database model tests
+│   └── requirements.txt    # Python dependencies
 │
 ├── frontend/
 │   ├── src/
-│   │   ├── components/        # Reusable React components
-│   │   │   ├── BookCard.jsx
-│   │   │   ├── SessionForm.jsx
-│   │   │   ├── SessionList.jsx
-│   │   │   └── ThemeToggle.jsx
-│   │   ├── pages/             # Page-level components
-│   │   │   ├── LandingPage.jsx
-│   │   │   ├── LibraryPage.jsx
-│   │   │   ├── BookDetailPage.jsx
-│   │   │   └── AddBookPage.jsx
-│   │   ├── context/
-│   │   │   └── ThemeContext.jsx  # Theme state management
-│   │   ├── services/
-│   │   │   └── api.js         # API service layer
-│   │   ├── App.jsx            # Main application component
-│   │   ├── main.jsx           # Application entry point
-│   │   └── index.css          # Global styles and theme
-│   ├── public/
-│   │   └── book.png           # Favicon and logo
-│   ├── package.json
-│   └── vite.config.js
+│   │   ├── components/     # Reusable React components
+│   │   ├── pages/          # Page-level components
+│   │   ├── context/        # React Context (Auth, Theme)
+│   │   └── services/       # API service layer
+│   └── package.json        # Node dependencies
 │
-└── README.md
+└── .github/
+    └── workflows/
+        └── backend-tests.yml  # CI/CD configuration
 ```
+
+---
 
 ## Getting Started
 
 ### Prerequisites
-- **Node.js** 16+ and npm
-- **Python** 3.8+
-- Internet connection (for Google Books API)
+- Node.js 16+ and npm
+- Python 3.8+
+- Git
 
 ### Installation
 
-#### 1. Clone the repository
+**1. Clone the repository**
 ```bash
 git clone <repository-url>
 cd bookshop
 ```
 
-#### 2. Backend Setup
+**2. Backend Setup**
 ```bash
 cd backend
-
-# Create and activate virtual environment
 python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
 pip install -r requirements.txt
-
-# Run the Flask server
+python migrate_add_users.py  # Initialize database
 python app.py
 ```
-Backend will run on `http://localhost:5000`
 
-#### 3. Frontend Setup
+**3. Frontend Setup**
 ```bash
 cd frontend
-
-# Install dependencies
 npm install
-
-# Start development server
 npm run dev
 ```
-Frontend will run on `http://localhost:5173`
 
-### First-Time Setup
-The SQLite database will be automatically created when you first run the backend. Tables are created via SQLAlchemy's `db.create_all()` on application startup.
+**4. Access the application**
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:5000
 
-## Usage
+---
 
-### Navigating the App
-- **Home (/)** - Landing page with features and recent books
-- **My Library (/library)** - Full library view with filters and stats
-- **Add Book (/add)** - Search or manually add new books
-- **Book Details** - Click any book to view details and log sessions
+## API Documentation
 
-### Adding Books
-1. Click **"+ Add Book"** in the navigation
-2. Search for a book using the Google Books API
-3. Select from results (auto-fills metadata and cover)
-4. Review and confirm, or edit details manually
-5. Book appears in your library immediately
+### Authentication Endpoints
+- `POST /api/auth/register` - Create new user account
+- `POST /api/auth/login` - User login
+- `POST /api/auth/logout` - User logout
+- `GET /api/auth/me` - Get current user
 
-### Tracking Progress
-1. Click on any book in your library
-2. Use **"Update Current Page"** for quick progress updates
-3. Click **"+ Log Session"** to record a detailed reading session
-4. Enter pages read, duration, and optional notes
-5. View updated statistics and reading history
-
-### Managing Your Library
-- **Filter books** using status tabs (All, Currently Reading, Completed, Want to Read)
-- **View stats** with the dashboard showing reading counts and total pages
-- **View progress** with visual progress bars on each book card
-- **Delete books** using the delete button on book cards
-- **Delete sessions** to correct mistakes or remove old entries
-
-### Theme Customization
-- **Toggle Day/Night Mode** - Click the sun/moon toggle in the top navigation
-- **Persistent Preference** - Your theme choice is saved in browser localStorage
-- **Smooth Transitions** - All colors smoothly fade between themes
-
-## Database Schema
-
-### Books Table
-```sql
-id              INTEGER PRIMARY KEY
-title           VARCHAR(200) NOT NULL
-author          VARCHAR(200) NOT NULL
-total_pages     INTEGER NOT NULL
-current_page    INTEGER DEFAULT 0
-status          VARCHAR(20) DEFAULT 'not-started'
-cover_url       VARCHAR(500)
-thumbnail_url   VARCHAR(500)
-isbn            VARCHAR(20)
-google_books_id VARCHAR(100)
-date_started    DATE
-date_completed  DATE
-created_at      DATETIME
-```
-
-### Reading Sessions Table
-```sql
-id               INTEGER PRIMARY KEY
-book_id          INTEGER FOREIGN KEY
-session_date     DATE NOT NULL
-pages_read       INTEGER NOT NULL
-duration_minutes INTEGER NOT NULL
-notes            TEXT
-created_at       DATETIME
-```
-
-## API Endpoints
-
-### Books
-- `GET /api/books` - Retrieve all books
-- `GET /api/books/:id` - Get single book by ID
+### Book Endpoints
+- `GET /api/books` - Get all books for current user
 - `POST /api/books` - Create new book
-- `PUT /api/books/:id` - Update book details
-- `DELETE /api/books/:id` - Delete book and associated sessions
+- `GET /api/books/:id` - Get book details
+- `PUT /api/books/:id` - Update book
+- `DELETE /api/books/:id` - Delete book
 
-### Reading Sessions
-- `GET /api/books/:id/sessions` - Get all sessions for a book
-- `POST /api/sessions` - Create new reading session
+### Reading Session Endpoints
+- `GET /api/books/:id/sessions` - Get sessions for a book
+- `POST /api/sessions` - Create reading session
 - `DELETE /api/sessions/:id` - Delete session
 
 ### External API
 - `GET /api/search/books?q=query` - Search Google Books API
 
-### Utility
-- `GET /api/health` - Health check endpoint
+All book and session endpoints require authentication.
+
+---
+
+## Testing
+
+**Run Backend Tests**
+```bash
+cd backend
+source venv/bin/activate
+pytest                    # Run all tests
+pytest --cov=.           # With coverage report
+pytest -v                # Verbose output
+```
+
+**Test Coverage**
+- 23 comprehensive tests covering:
+  - User authentication and authorization
+  - Book CRUD operations
+  - Reading session management
+  - Database relationships and cascade deletes
+  - Input validation and error handling
+
+**Continuous Integration**
+- GitHub Actions automatically runs all tests on every push to main branch
+- Tests must pass before merging pull requests
+- Coverage reports generated for each run
+
+---
 
 ## Design System
 
-### Lofi-Inspired Aesthetic
-The interface draws inspiration from lofi study aesthetics, creating a calm, focused environment for tracking reading progress.
+**Color Themes**
 
-**Day Theme:**
-- Warm, creamy backgrounds (#F5F1E8)
-- Terracotta accent (#D97757)
-- Soft shadows and natural tones
-- Perfect for daytime reading
+*Day Theme:* Warm, cozy tones with cream backgrounds and terracotta accents
 
-**Night Theme:**
-- Deep blue-grey backgrounds (#1a2332)
-- Warm orange accents (#f5a462) - like cozy lamp light
-- Cool exterior blues (#5c8fa3)
-- Inspired by evening study sessions
+*Night Theme:* Deep blue-grey backgrounds with warm orange accents inspired by evening study sessions
 
-### Typography
-- **Display** (DM Serif Display) - Italic headers, elegant and distinctive
-- **Body** (IBM Plex Mono) - Monospace text for that coding/study vibe
-- **Buttons** (Space Mono) - Bold, retro aesthetic
+**Typography**
+- Headers: DM Serif Display (italic, elegant)
+- Body: IBM Plex Mono (monospace for lofi aesthetic)
+- Buttons: Space Mono (bold, retro)
 
-### Visual Elements
-- **Grain Texture** - Subtle noise overlay for vintage atmosphere
-- **Custom Scrollbar** - Themed to match accent colors
-- **Smooth Transitions** - All theme changes animate smoothly
-- **SVG Icons** - Clean, minimal icons replace emoji throughout
+**Visual Elements**
+- Grain texture overlay for vintage atmosphere
+- Custom scrollbar matching theme colors
+- Smooth transitions between themes
+- SVG icons for clean, scalable graphics
 
-### Design Philosophy
-The interface evokes the atmosphere of late-night study sessions - monospace fonts, warm lighting against cool backgrounds, and a subtle grain texture that feels like watching through a window. Every element is designed to be calming and focused, making reading tracking as peaceful as reading itself.
+---
 
-## Data Validation
+## Database Schema
 
-### Frontend Validation
-- Required fields enforced on all forms
-- Numeric inputs validated for valid ranges
-- Page counts cannot exceed book total
-- Dates cannot be in the future
-- URLs validated for proper format
+**Users Table**
+```
+id, username (unique), email (unique), password_hash, created_at
+```
 
-### Backend Validation
-- Request data validated before database operations
-- Foreign key constraints ensure data integrity
-- Cascade deletes prevent orphaned sessions
-- Error responses include descriptive messages
+**Books Table**
+```
+id, user_id (FK), title, author, total_pages, current_page, status,
+cover_url, thumbnail_url, isbn, google_books_id,
+date_started, date_completed, created_at
+```
+
+**Reading Sessions Table**
+```
+id, book_id (FK), session_date, pages_read, duration_minutes,
+notes, created_at
+```
+
+**Relationships:**
+- User → Books (one-to-many, cascade delete)
+- Book → Sessions (one-to-many, cascade delete)
+
+---
+
+## Security Features
+
+- Password hashing with Werkzeug's generate_password_hash
+- Session-based authentication with Flask-Login
+- HTTP-only cookies preventing XSS attacks
+- CORS configured to allow only authorized origins
+- User data isolation - users can only access their own books
+- Input validation on all API endpoints
+
+---
+
+## Development Decisions
+
+**Why React?** Component reusability, strong ecosystem, and excellent developer experience with hooks
+
+**Why Flask?** Lightweight, flexible, perfect for small-to-medium APIs with great Python integration
+
+**Why SQLite for Development?** Zero configuration, easy to set up, perfect for local development and prototyping
+
+**Why Lofi Design?** Creates a calm, focused environment that complements the reading tracking experience
+
+---
 
 ## Future Enhancements
 
-### Planned Features
-- **User Authentication** - Multi-user support with accounts and login
-- **Reading Goals** - Set and track monthly/yearly reading targets
-- **Statistics Dashboard** - Advanced analytics with charts and graphs
-- **Book Ratings** - Rate books on a 5-star scale
-- **Tags/Categories** - Organize books by genre or custom tags
-- **Reading Streaks** - Track consecutive days of reading
-- **Export Data** - Download reading history as CSV/JSON
-- **Social Features** - Share book recommendations with friends
-- **Mobile App** - Native iOS/Android applications
-- **Background Music** - Optional lofi music player integration
+**Planned Features**
+- Reading goals with monthly/yearly targets
+- Advanced statistics dashboard with charts
+- Book ratings and reviews
+- Genre/category tagging system
+- Social features for sharing recommendations
+- Mobile applications for iOS and Android
+- Export reading history as CSV/JSON
 
-### Technical Improvements
-- Pagination for large book libraries
-- Search and sort functionality
+**Technical Improvements**
+- Deployment to production (Render/Railway)
 - Database migrations with Alembic
-- Unit and integration tests
+- Frontend testing with Vitest
 - Docker containerization
-- CI/CD pipeline
-- Production deployment configuration
-- PostgreSQL for production database
-- Caching layer for API responses
+- Redis caching layer
 - Image optimization and CDN
 
-## Known Issues & Limitations
+---
+
+## Known Limitations
 
 - Google Books API has rate limits (1,000 requests/day for free tier)
-- Some books may not have complete metadata in Google Books
-- Cover images are dependent on external URLs (could break over time)
-- Single-user application (no authentication yet)
-- Limited to local development (not production-ready)
-- Theme preference stored in localStorage (not synced across devices)
+- Single-user sessions (no concurrent editing)
+- SQLite not recommended for production deployment
+- Cover images dependent on external URLs
 
-## Development Notes
-
-### Why These Technologies?
-- **React**: Component reusability, strong ecosystem, excellent developer experience with hooks
-- **Flask**: Lightweight, flexible, perfect for small-to-medium APIs, great Python integration
-- **SQLite**: Zero configuration, perfect for local development and prototyping
-- **Tailwind CSS**: Rapid UI development, consistent design system, easy theme customization
-- **Context API**: Simple state management without external dependencies
-
-### Code Quality
-- Consistent naming conventions across frontend and backend
-- Component-based architecture for maintainability
-- Separation of concerns (routes, models, services, context)
-- Error handling on all API calls
-- Responsive design patterns throughout
-- Theme management using React Context
-- CSS custom properties for dynamic theming
-
-### Learning Outcomes
-This project demonstrates:
-- Full-stack development skills with modern tools
-- RESTful API design principles
-- Modern React patterns (hooks, routing, context)
-- Database modeling and relationships
-- External API integration
-- UI/UX design sensibility with theme system
-- Project structure and organization
-- State management patterns
+---
 
 ## License
 
 This project is open source and available under the MIT License.
+
+---
+
+## Acknowledgments
+
+- Google Books API for book metadata
+- Tailwind CSS for the utility-first CSS framework
+- Lofi Girl for design inspiration
+- Flask and React communities for excellent documentation
