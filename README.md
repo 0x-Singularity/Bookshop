@@ -20,7 +20,8 @@ A full-stack web application for tracking your reading journey. Built with React
 ### Day/Night Theme
 ![Dark Mode Preview](/pictures/DarkMode.png)
 
-### ![User Signup](/pictures/Usersignup.png)
+### User Signup 
+![User Signup](/pictures/Usersignup.png)
 
 ---
 
