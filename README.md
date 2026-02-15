@@ -2,7 +2,7 @@
 
 A full-stack web application for tracking your reading journey. Built with React and Flask, Bookshop features user authentication, Google Books API integration, and a lofi-inspired design with day/night themes.
 
-![Tests](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME/actions/workflows/backend-tests.yml/badge.svg)
+![Tests](https://github.com/0x-singularity/Bookshop/actions/workflows/backend-tests.yml/badge.svg)
 
 ---
 
