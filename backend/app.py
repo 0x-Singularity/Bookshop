@@ -1,22 +1,107 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, session
 from flask_cors import CORS
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from config import Config
-from models import db, Book, ReadingSession
+from models import db, User, Book, ReadingSession
 from datetime import datetime, date
 import requests
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
-# Enable CORS for frontend communication
-CORS(app)
+# Enable CORS with credentials support
+CORS(app, supports_credentials=True, origins=['http://localhost:5173'])
 
 # Initialize database
 db.init_app(app)
 
+# Initialize Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 # Create tables if they don't exist
 with app.app_context():
     db.create_all()
+
+
+# ==================== AUTHENTICATION ROUTES ====================
+
+@app.route('/api/auth/register', methods=['POST'])
+def register():
+    """Register a new user"""
+    data = request.get_json()
+    
+    # Validate required fields
+    if not data.get('username') or not data.get('email') or not data.get('password'):
+        return jsonify({'error': 'Username, email, and password are required'}), 400
+    
+    # Check if user already exists
+    if User.query.filter_by(username=data['username']).first():
+        return jsonify({'error': 'Username already exists'}), 400
+    
+    if User.query.filter_by(email=data['email']).first():
+        return jsonify({'error': 'Email already exists'}), 400
+    
+    # Create new user
+    user = User(
+        username=data['username'],
+        email=data['email']
+    )
+    user.set_password(data['password'])
+    
+    db.session.add(user)
+    db.session.commit()
+    
+    # Log the user in
+    login_user(user)
+    
+    return jsonify({
+        'message': 'User created successfully',
+        'user': user.to_dict()
+    }), 201
+
+
+@app.route('/api/auth/login', methods=['POST'])
+def login():
+    """Log in a user"""
+    data = request.get_json()
+    
+    if not data.get('username') or not data.get('password'):
+        return jsonify({'error': 'Username and password are required'}), 400
+    
+    # Find user
+    user = User.query.filter_by(username=data['username']).first()
+    
+    if not user or not user.check_password(data['password']):
+        return jsonify({'error': 'Invalid username or password'}), 401
+    
+    # Log the user in
+    login_user(user, remember=True)
+    
+    return jsonify({
+        'message': 'Logged in successfully',
+        'user': user.to_dict()
+    }), 200
+
+
+@app.route('/api/auth/logout', methods=['POST'])
+@login_required
+def logout():
+    """Log out the current user"""
+    logout_user()
+    return jsonify({'message': 'Logged out successfully'}), 200
+
+
+@app.route('/api/auth/me', methods=['GET'])
+@login_required
+def get_current_user():
+    """Get the current logged-in user"""
+    return jsonify({'user': current_user.to_dict()}), 200
 
 
 # ==================== BOOK SEARCH ROUTES ====================
@@ -71,20 +156,23 @@ def search_books():
 # ==================== BOOK ROUTES ====================
 
 @app.route('/api/books', methods=['GET'])
+@login_required
 def get_books():
-    """Get all books"""
-    books = Book.query.order_by(Book.created_at.desc()).all()
+    """Get all books for the current user"""
+    books = Book.query.filter_by(user_id=current_user.id).order_by(Book.created_at.desc()).all()
     return jsonify([book.to_dict() for book in books]), 200
 
 
 @app.route('/api/books/<int:book_id>', methods=['GET'])
+@login_required
 def get_book(book_id):
     """Get a single book by ID"""
-    book = Book.query.get_or_404(book_id)
+    book = Book.query.filter_by(id=book_id, user_id=current_user.id).first_or_404()
     return jsonify(book.to_dict()), 200
 
 
 @app.route('/api/books', methods=['POST'])
+@login_required
 def create_book():
     """Create a new book"""
     data = request.get_json()
@@ -94,6 +182,7 @@ def create_book():
         return jsonify({'error': 'Title, author, and total_pages are required'}), 400
     
     new_book = Book(
+        user_id=current_user.id,
         title=data['title'],
         author=data['author'],
         total_pages=data['total_pages'],
@@ -112,9 +201,10 @@ def create_book():
 
 
 @app.route('/api/books/<int:book_id>', methods=['PUT'])
+@login_required
 def update_book(book_id):
     """Update a book"""
-    book = Book.query.get_or_404(book_id)
+    book = Book.query.filter_by(id=book_id, user_id=current_user.id).first_or_404()
     data = request.get_json()
     
     # Update fields if provided
@@ -148,9 +238,10 @@ def update_book(book_id):
 
 
 @app.route('/api/books/<int:book_id>', methods=['DELETE'])
+@login_required
 def delete_book(book_id):
     """Delete a book and all its sessions"""
-    book = Book.query.get_or_404(book_id)
+    book = Book.query.filter_by(id=book_id, user_id=current_user.id).first_or_404()
     db.session.delete(book)
     db.session.commit()
     
@@ -160,14 +251,16 @@ def delete_book(book_id):
 # ==================== READING SESSION ROUTES ====================
 
 @app.route('/api/books/<int:book_id>/sessions', methods=['GET'])
+@login_required
 def get_book_sessions(book_id):
     """Get all reading sessions for a book"""
-    book = Book.query.get_or_404(book_id)
+    book = Book.query.filter_by(id=book_id, user_id=current_user.id).first_or_404()
     sessions = ReadingSession.query.filter_by(book_id=book_id).order_by(ReadingSession.session_date.desc()).all()
     return jsonify([session.to_dict() for session in sessions]), 200
 
 
 @app.route('/api/sessions', methods=['POST'])
+@login_required
 def create_session():
     """Create a new reading session"""
     data = request.get_json()
@@ -176,7 +269,8 @@ def create_session():
     if not data.get('book_id') or not data.get('pages_read') or not data.get('duration_minutes'):
         return jsonify({'error': 'book_id, pages_read, and duration_minutes are required'}), 400
     
-    book = Book.query.get_or_404(data['book_id'])
+    # Verify the book belongs to the current user
+    book = Book.query.filter_by(id=data['book_id'], user_id=current_user.id).first_or_404()
     
     # Create the session
     new_session = ReadingSession(
@@ -211,12 +305,15 @@ def create_session():
 
 
 @app.route('/api/sessions/<int:session_id>', methods=['DELETE'])
+@login_required
 def delete_session(session_id):
     """Delete a reading session"""
     session = ReadingSession.query.get_or_404(session_id)
     
+    # Verify the session's book belongs to the current user
+    book = Book.query.filter_by(id=session.book_id, user_id=current_user.id).first_or_404()
+    
     # Update the book's current page (subtract the pages from this session)
-    book = Book.query.get(session.book_id)
     book.current_page -= session.pages_read
     if book.current_page < 0:
         book.current_page = 0
