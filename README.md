@@ -67,7 +67,7 @@ A full-stack web application for tracking your reading journey. Built with React
 - **Werkzeug** - Password hashing for security
 
 ### Development & Testing
-- **Pytest** - Backend testing framework with 23 comprehensive tests
+- **Pytest** - Backend testing framework with 36 comprehensive tests
 - **GitHub Actions** - Automated CI/CD pipeline running tests on every push
 - **Vite** - Fast build tool and development server
 
